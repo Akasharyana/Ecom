@@ -1,0 +1,24 @@
+name: Deploy to EC2
+
+on:
+  push: # Trigger on pushes to any branch
+
+jobs:
+  deploy:
+    name: Deploy to EC2 Instance
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v1
+
+      - name: Deploy to EC2 instance
+        uses: easingthemes/ssh-deploy@v2  # Action to deploy over SSH
+
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}  # Encrypted SSH key
+          SOURCE: "./"  # Path to your code (current directory)
+          REMOTE_HOST: "13.201.168.46"  # Public IP of your EC2 instance
+          REMOTE_USER: "ubuntu"  # Username on the EC2 instance (replace if different)
+          TARGET: "/var/www/html"  # Target directory on the EC2 instance
+
